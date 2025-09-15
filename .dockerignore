@@ -1,0 +1,9 @@
+target
+.mvn/.cache
+.git
+.gitignore
+.idea
+.vscode
+*.iml
+docker-compose.yml
+**/node_modules

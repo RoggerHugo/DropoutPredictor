@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: springboot-api
+    env: docker
+    plan: starter   # o free/starter/standard según necesites
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+
+    # Render hace health checks; aquí apuntas al endpoint
+    healthCheckPath: /actuator/health
+    healthCheckPeriodSeconds: 30
+
+    # Render inyecta PORT; si quieres setear envs adicionales:
+    envVars:
+      - key: JAVA_OPTS
+        value: "-XX:MaxRAMPercentage=75.0"
+      # Ejemplos:
+      # - key: SPRING_PROFILES_ACTIVE
+      #   value: prod
+      # - key: SPRING_DATASOURCE_URL
+      #   sync: false   # márcalo como Secret en el panel
+
+    # Escalado e instancias
+    numInstances: 1
+    region: oregon  # elige región en tu panel si procede
+
+# Ejemplo de base de datos administrada por Render (opcional):
+# databases:
+#   - name: my-postgres
+#     databaseName: appdb
+#     plan: starter
