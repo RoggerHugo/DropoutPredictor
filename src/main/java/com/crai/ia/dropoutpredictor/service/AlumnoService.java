@@ -14,4 +14,6 @@ public interface AlumnoService {
     AlumnoResponse actualizar(Long id, AlumnoRequest req);
 
     void eliminar(Long id, boolean soft);
+
+    AlumnoDetailResponse obtenerDetalle(Long id);
 }

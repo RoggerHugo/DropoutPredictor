@@ -17,11 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import com.crai.ia.dropoutpredictor.dto.AlumnoDetailResponse;
 import com.crai.ia.dropoutpredictor.dto.AlumnoRequest;
 import com.crai.ia.dropoutpredictor.dto.AlumnoResponse;
 import com.crai.ia.dropoutpredictor.service.AlumnoService;
 
-import org.springframework.web.bind.annotation.RequestBody; 
+import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.validation.Valid;
 
@@ -61,6 +62,11 @@ public class StudentController {
     return service.obtener(id);
   }
 
+  @GetMapping("/{id}/detail")
+  public AlumnoDetailResponse obtenerDetalle(@PathVariable Long id) {
+    return service.obtenerDetalle(id);
+  }
+
   @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
   public AlumnoResponse actualizar(
       @PathVariable Long id,
@@ -86,9 +92,12 @@ public class StudentController {
   }
 
   /*
-  @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void eliminar(@PathVariable Long id, @RequestParam(defaultValue = "true") boolean soft) {
-    service.eliminar(id, soft);
-  }*/
+   * @DeleteMapping("/{id}")
+   * 
+   * @ResponseStatus(HttpStatus.NO_CONTENT)
+   * public void eliminar(@PathVariable Long id, @RequestParam(defaultValue =
+   * "true") boolean soft) {
+   * service.eliminar(id, soft);
+   * }
+   */
 }

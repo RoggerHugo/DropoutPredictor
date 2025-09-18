@@ -125,4 +125,12 @@ public class AlumnoServiceImpl implements AlumnoService {
             repo.delete(a);
         }
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AlumnoDetailResponse obtenerDetalle(Long id) {
+        var p = repo.findDetailById(id)
+                .orElseThrow(() -> new NotFoundException("Alumno " + id + " no existe o no tiene detalle/encuesta"));
+        return AlumnoDetailResponse.from(p);
+    }
 }
