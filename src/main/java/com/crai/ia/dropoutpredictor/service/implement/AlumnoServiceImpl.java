@@ -2,6 +2,7 @@ package com.crai.ia.dropoutpredictor.service.implement;
 
 import com.crai.ia.dropoutpredictor.dto.*;
 import com.crai.ia.dropoutpredictor.entity.*;
+import com.crai.ia.dropoutpredictor.integration.crai.CraiClient;
 import com.crai.ia.dropoutpredictor.repository.AlumnoRepository;
 import com.crai.ia.dropoutpredictor.repository.CarreraRepository;
 import com.crai.ia.dropoutpredictor.repository.EstadoCivilRepository;
@@ -27,15 +28,18 @@ public class AlumnoServiceImpl implements AlumnoService {
     private final EstadoCivilRepository estadoCivilRepo;
     private final TurnoRepository turnoRepo;
     private final CarreraRepository carreraRepo;
+    private final CraiClient crai;
 
     public AlumnoServiceImpl(AlumnoRepository repo,
             EstadoCivilRepository estadoCivilRepo,
             TurnoRepository turnoRepo,
-            CarreraRepository carreraRepo) {
+            CarreraRepository carreraRepo,
+            CraiClient crai) {
         this.repo = repo;
         this.estadoCivilRepo = estadoCivilRepo;
         this.turnoRepo = turnoRepo;
         this.carreraRepo = carreraRepo;
+        this.crai = crai;
     }
 
     private AlumnoResponse toRes(Alumno a) {
@@ -55,8 +59,6 @@ public class AlumnoServiceImpl implements AlumnoService {
         a.setNombreCompleto(r.nombreCompleto());
         a.setMatricula(r.matricula());
         a.setFechaNacimiento(r.fechaNacimiento());
-        // prioridad al valor explícito; si null y hay fecha, se calcula (también en
-        // @PrePersist/@PreUpdate)
         if (r.edad() != null)
             a.setEdad(r.edad());
         else if (r.fechaNacimiento() != null)
@@ -92,9 +94,9 @@ public class AlumnoServiceImpl implements AlumnoService {
     public Page<AlumnoResponse> listar(Pageable pageable, String q, Long carreraId, Long turnoId, Long estadoCivilId,
             Boolean activo) {
         Specification<Alumno> spec = Specification.allOf(
-                q(q), // OR interno de nombre/matricula
-                porCarrera(carreraId), // AND
-                porTurno(turnoId), // AND
+                q(q),
+                porCarrera(carreraId), 
+                porTurno(turnoId), 
                 porEstadoCivil(estadoCivilId),
                 porActivo(activo));
 
@@ -132,5 +134,19 @@ public class AlumnoServiceImpl implements AlumnoService {
         var p = repo.findDetailById(id)
                 .orElseThrow(() -> new NotFoundException("Alumno " + id + " no existe o no tiene detalle/encuesta"));
         return AlumnoDetailResponse.from(p);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AlumnoDetailWithPredictionResponse obtenerDetalleConPrediccion(Long id) {
+        var p = repo.findDetailById(id)
+                .orElseThrow(() -> new NotFoundException("Alumno " + id + " no existe o no tiene detalle/encuesta"));
+
+        var detail = AlumnoDetailResponse.from(p);
+
+        var features = FeatureMapper.toFeatures(detail);
+        var prediction = crai.predict(new PredictRequest(features));
+        System.out.println("Predicción recibida: " + prediction);
+        return new AlumnoDetailWithPredictionResponse(detail, prediction);
     }
 }

@@ -49,7 +49,6 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         String token = jwtService.generateToken(user);
-        // ttl-minutes puede venir de properties; exponemos en segundos
         return new AuthResponse(token, "Bearer", 60L * Long.parseLong(System.getProperty("app.jwt.ttl-minutes", "60")));
     }
 }

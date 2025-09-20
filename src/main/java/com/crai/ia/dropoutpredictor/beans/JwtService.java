@@ -71,13 +71,10 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        // Admite secreto en Base64 o texto plano; si es Base64 válido se usa
-        // Decoders.BASE64
         try {
             byte[] keyBytes = Decoders.BASE64.decode(secret);
             return Keys.hmacShaKeyFor(keyBytes);
         } catch (IllegalArgumentException ex) {
-            // no era Base64: usa bytes de la cadena
             byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
             return Keys.hmacShaKeyFor(keyBytes);
         }

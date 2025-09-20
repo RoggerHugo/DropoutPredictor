@@ -15,14 +15,14 @@ public class Alumno {
     @Column(name = "nombre_completo", nullable = false, length = 200)
     private String nombreCompleto;
 
-    @Column(name = "matricula", nullable = true, length = 30) // si aún no es obligatoria, déjala nullable
+    @Column(name = "matricula", nullable = true, length = 30) 
     private String matricula;
 
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
     @Column(name = "edad")
-    private Integer edad; // la BD ya la tiene; si quieres calcularla, lo hacemos en servicio
+    private Integer edad; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estado_civil_id")

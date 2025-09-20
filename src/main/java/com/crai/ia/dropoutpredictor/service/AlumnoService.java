@@ -16,4 +16,6 @@ public interface AlumnoService {
     void eliminar(Long id, boolean soft);
 
     AlumnoDetailResponse obtenerDetalle(Long id);
+
+    AlumnoDetailWithPredictionResponse obtenerDetalleConPrediccion(Long id);
 }
