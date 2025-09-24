@@ -3,6 +3,7 @@ package com.crai.ia.dropoutpredictor.controllers;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,6 +28,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = {
+    "https://dashboardpredictor.onrender.com",
+    "http://localhost:4200"
+})
 @RestController
 @RequestMapping("/api/student")
 public class StudentController {
@@ -62,17 +67,16 @@ public class StudentController {
   public AlumnoDetailResponse obtener(@PathVariable Long id) {
     return service.obtenerDetalle(id);
   }
-  
+
   @GetMapping("/{id}/detail")
-  public AlumnoDetailWithPredictionResponse  obtenerDetalle(@PathVariable Long id) {
+  public AlumnoDetailWithPredictionResponse obtenerDetalle(@PathVariable Long id) {
     return service.obtenerDetalleConPrediccion(id);
   }
 
   @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
   public AlumnoResponse actualizar(
       @PathVariable Long id,
-      @Valid @RequestBody AlumnoRequest req 
-  ) {
+      @Valid @RequestBody AlumnoRequest req) {
     return service.actualizar(id, req);
   }
 

@@ -17,12 +17,19 @@ public class AuthController {
 
     private final AuthService authService;
 
-    /* Se inabilita el regitro 
-    @PostMapping("/register")
-    public ResponseEntity<AppUser> register(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
-    }
-    */
+    /*
+     * Se inabilita el regitro
+     * 
+     * @PostMapping("/register")
+     * public ResponseEntity<AppUser> register(@Valid @RequestBody RegisterRequest
+     * request) {
+     * return ResponseEntity.ok(authService.register(request));
+     * }
+     */
+    @CrossOrigin(origins = {
+            "https://dashboardpredictor.onrender.com",
+            "http://localhost:4200"
+    })
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
         return ResponseEntity.ok(authService.login(request));
