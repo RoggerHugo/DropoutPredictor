@@ -3,7 +3,6 @@ package com.crai.ia.dropoutpredictor.controllers;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,10 +23,18 @@ import com.crai.ia.dropoutpredictor.dto.AlumnoRequest;
 import com.crai.ia.dropoutpredictor.dto.AlumnoResponse;
 import com.crai.ia.dropoutpredictor.service.AlumnoService;
 
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin(origins = {
+    "https://dashboardpredictor.onrender.com",
+    "http://localhost:4200"
+}, allowedHeaders = {
+    "Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"
+}, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+    RequestMethod.PATCH, RequestMethod.DELETE, RequestMethod.OPTIONS }, exposedHeaders = { "Authorization" },
+    maxAge = 3600)
 @RestController
 @RequestMapping("/api/student")
 public class StudentController {
@@ -38,19 +45,11 @@ public class StudentController {
     this.service = service;
   }
 
-  @CrossOrigin(origins = {
-      "https://dashboardpredictor.onrender.com",
-      "http://localhost:4200"
-  })
   @PostMapping(consumes = "application/json", produces = "application/json")
   public ResponseEntity<AlumnoResponse> crear(@Valid @RequestBody AlumnoRequest req) {
     return ResponseEntity.status(HttpStatus.CREATED).body(service.crear(req));
   }
 
-  @CrossOrigin(origins = {
-      "https://dashboardpredictor.onrender.com",
-      "http://localhost:4200"
-  })
   @GetMapping
   public Page<AlumnoResponse> listar(
       @RequestParam(defaultValue = "0") int page,
@@ -67,28 +66,16 @@ public class StudentController {
     return service.listar(pageable, q, carreraId, turnoId, estadoCivilId, activo);
   }
 
-  @CrossOrigin(origins = {
-      "https://dashboardpredictor.onrender.com",
-      "http://localhost:4200"
-  })
   @GetMapping("/{id}")
   public AlumnoDetailResponse obtener(@PathVariable Long id) {
     return service.obtenerDetalle(id);
   }
 
-  @CrossOrigin(origins = {
-      "https://dashboardpredictor.onrender.com",
-      "http://localhost:4200"
-  })
   @GetMapping("/{id}/detail")
   public AlumnoDetailWithPredictionResponse obtenerDetalle(@PathVariable Long id) {
     return service.obtenerDetalleConPrediccion(id);
   }
 
-  @CrossOrigin(origins = {
-      "https://dashboardpredictor.onrender.com",
-      "http://localhost:4200"
-  })
   @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
   public AlumnoResponse actualizar(
       @PathVariable Long id,
@@ -96,10 +83,6 @@ public class StudentController {
     return service.actualizar(id, req);
   }
 
-  @CrossOrigin(origins = {
-      "https://dashboardpredictor.onrender.com",
-      "http://localhost:4200"
-  })
   @PatchMapping("/{id}/activo")
   public AlumnoResponse toggleActivo(@PathVariable Long id, @RequestParam boolean value) {
     AlumnoRequest base = service.obtener(id) != null
