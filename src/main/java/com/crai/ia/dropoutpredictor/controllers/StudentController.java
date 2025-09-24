@@ -27,14 +27,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
-@CrossOrigin(origins = {
-    "https://dashboardpredictor.onrender.com",
-    "http://localhost:4200"
-}, allowedHeaders = {
-    "Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"
-}, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-    RequestMethod.PATCH, RequestMethod.DELETE, RequestMethod.OPTIONS }, exposedHeaders = { "Authorization" },
-    maxAge = 3600)
 @RestController
 @RequestMapping("/api/student")
 public class StudentController {
